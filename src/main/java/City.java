@@ -16,14 +16,21 @@ public class City {
     public String getName() {
         return name;
     }
+
     public String getRegion() {
         return region;
     }
+
     public String getDistrict() {
         return district;
     }
+
     public int getPopulation() {
         return population;
+    }
+
+    public int getFoundation() {
+        return foundation;
     }
 
     @Override

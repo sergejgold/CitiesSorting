@@ -5,21 +5,69 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class Utils {
+
+    public static void quering(String query) {
+        try {
+            String myDriver = "com.mysql.cj.jdbc.Driver";
+            String myUrl = "jdbc:mysql://localhost:3306/sys?allowPublicKeyRetrieval=true&useSSL=false";
+            Class.forName(myDriver);
+            Connection conn = DriverManager.getConnection(myUrl, "root", "GtV7t31z");
+            PreparedStatement preparedStmt = conn.prepareStatement(query);
+            preparedStmt.execute();
+            ResultSet resultSet = preparedStmt.executeQuery(query);
+
+            while (resultSet.next()) {
+                String name = resultSet.getString("name");
+                String region = resultSet.getString("region");
+                String district = resultSet.getString("district");
+                int population = resultSet.getInt("population");
+                int foundation = resultSet.getInt("foundation");
+
+                System.out.println("City{name='" + name + "', region='" + region + ", district='" + district +
+                                "', population=" + population + ", foundation='" + foundation + "'");
+            }
+            conn.close();
+        } catch (SQLException | ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static void quering2(String query) {
+        try {
+            String myDriver = "com.mysql.cj.jdbc.Driver";
+            String myUrl = "jdbc:mysql://localhost:3306/sys?allowPublicKeyRetrieval=true&useSSL=false";
+            Class.forName(myDriver);
+            Connection conn = DriverManager.getConnection(myUrl, "root", "GtV7t31z");
+            PreparedStatement preparedStmt = conn.prepareStatement(query);
+            preparedStmt.execute();
+            ResultSet resultSet = preparedStmt.executeQuery(query);
+
+            while (resultSet.next()) {
+                String region = resultSet.getString("region");
+                int countCities = resultSet.getInt("countCities");
+                System.out.println(region + " - " + countCities);
+            }
+            conn.close();
+        } catch (SQLException | ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
 
     public static List<City> addToList() {
         List<City> cities = new ArrayList<>();
         try {
+
             Scanner scanner = new Scanner(new File("Cities.txt"));
             while (scanner.hasNextLine()) {
                 cities.add(parsingToObject(scanner.nextLine()));
             }
             scanner.close();
-            for (int i = 0; i < cities.size(); i++) {
-                System.out.println(cities.get(i));
-            }
+            String query = "select * from Cities";
+            quering(query);
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -42,7 +90,7 @@ public class Utils {
     public static void makeConnectAndTransfer(String s1, String s2, String s3, int i4, int i5) {
         try {
             String myDriver = "com.mysql.cj.jdbc.Driver";
-            String myUrl = "jdbc:mysql://localhost:3306/sys?useSSL=false";
+            String myUrl = "jdbc:mysql://localhost:3306/sys?allowPublicKeyRetrieval=true&useSSL=false";
             Class.forName(myDriver);
             Connection conn = DriverManager.getConnection(myUrl, "root", "GtV7t31z");
             String query = "insert into Cities (name, region, district, population, foundation)"
@@ -59,6 +107,8 @@ public class Utils {
             System.out.println(e.getMessage());
         }
     }
+
+
 
     public static List<City> getList() {
         List<City> cities = new ArrayList<>();
@@ -77,21 +127,28 @@ public class Utils {
     public static void deleteAllFields() {
         try {
             String myDriver = "com.mysql.cj.jdbc.Driver";
-            String myUrl = "jdbc:mysql://localhost:3306/sys?useSSL=false";
+            String myUrl = "jdbc:mysql://localhost:3306/sys?allowPublicKeyRetrieval=true&useSSL=false";
             Class.forName(myDriver);
             Connection conn = DriverManager.getConnection(myUrl, "root", "GtV7t31z");
             String query = "truncate Cities";
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.execute();
             conn.close();
-        } catch (SQLException |
-                ClassNotFoundException e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
+
+
+
     // Module 2
     public static void sortByName(List<City> cities) {
+        String query = "select *\n" +
+                "                from Cities\n" +
+                "        order by name";
+        quering(query);
+
         cities.sort(new Comparator<City>() {
             @Override
             public int compare(City o1, City o2) {
@@ -101,7 +158,17 @@ public class Utils {
     }
 
     public static void sortByDistrictAndName(List<City> cities) {
-        cities.sort(Comparator.comparing(City::getDistrict).thenComparing(City::getName));
+        String query = "select *\n" +
+                "                from Cities\n" +
+                "        order by district, name";
+        quering(query);
+
+
+
+
+
+
+        //cities.sort(Comparator.comparing(City::getDistrict).thenComparing(City::getName));
     }
 
     // module 3
@@ -122,6 +189,9 @@ public class Utils {
 
     // module 4
         public static void findCitiesForRegion(List<City> cities) {
-            System.out.println(cities.stream().collect(Collectors.groupingBy(City::getRegion, Collectors.counting())));
+            String query = "select region, count(*) as countCities\n" +
+                    "from Cities\n" +
+                    "group by region";
+            quering2(query);
         }
 }

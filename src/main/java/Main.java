@@ -1,7 +1,7 @@
 import java.util.List;
 import java.util.Scanner;
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         boolean flag = true;
         Utils.deleteAllFields();
         List<City> listCities = Utils.getList();
@@ -28,7 +28,6 @@ public class Main {
                 case "3":
                     System.out.println();
                     Utils.sortByName(listCities);
-                    printCities(listCities);
                     System.out.println();
                     break;
                 case "4":
