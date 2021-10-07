@@ -3,8 +3,21 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) throws Exception {
         boolean flag = true;
-        Utils.deleteAllFields();
         List<City> listCities = Utils.getList();
+        String drop = "DROP TABLE IF EXISTS cities";
+        String create = "create table if not exists Cities\n" +
+                "(\n" +
+                "    idCities int auto_increment\n" +
+                "    primary key,\n" +
+                "    name varchar(45) null,\n" +
+                "    region varchar(45) null,\n" +
+                "    district varchar(45) null,\n" +
+                "    population int null,\n" +
+                "    foundation int null\n" +
+                "    )";
+        Utils.loadScripts(drop);
+        Utils.loadScripts(create);
+        Utils.addToList();
         while (flag) {
             System.out.println("Выберите действие: ");
             System.out.println("1) Список городов.");
@@ -17,6 +30,7 @@ public class Main {
             switch (inputDigit.next()) {
                 case "1":
                     System.out.println();
+                    Utils.deleteAllFields();
                     Utils.addToList();
                     System.out.println();
                     break;
@@ -54,7 +68,6 @@ public class Main {
             }
         }
     }
-
     public static void printCities(List<City> cities) {
         cities.forEach(System.out::println);
     }

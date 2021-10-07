@@ -7,13 +7,26 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Utils {
+        public static void loadScripts(String query) {
+            try {
+                String myDriver = "com.mysql.cj.jdbc.Driver";
+                String myUrl = "jdbc:mysql://localhost:3306/sys?allowPublicKeyRetrieval=true&useSSL=false";
+                Class.forName(myDriver);
+                Connection conn = DriverManager.getConnection(myUrl, "root", "root");
+                PreparedStatement preparedStmt = conn.prepareStatement(query);
+                preparedStmt.execute();
+                conn.close();
+            } catch (SQLException | ClassNotFoundException e) {
+                System.out.println(e.getMessage());
+            }
+        }
 
     public static void quering(String query) {
         try {
             String myDriver = "com.mysql.cj.jdbc.Driver";
             String myUrl = "jdbc:mysql://localhost:3306/sys?allowPublicKeyRetrieval=true&useSSL=false";
             Class.forName(myDriver);
-            Connection conn = DriverManager.getConnection(myUrl, "root", "GtV7t31z");
+            Connection conn = DriverManager.getConnection(myUrl, "root", "root");
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.execute();
             ResultSet resultSet = preparedStmt.executeQuery(query);
@@ -39,7 +52,7 @@ public class Utils {
             String myDriver = "com.mysql.cj.jdbc.Driver";
             String myUrl = "jdbc:mysql://localhost:3306/sys?allowPublicKeyRetrieval=true&useSSL=false";
             Class.forName(myDriver);
-            Connection conn = DriverManager.getConnection(myUrl, "root", "GtV7t31z");
+            Connection conn = DriverManager.getConnection(myUrl, "root", "root");
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.execute();
             ResultSet resultSet = preparedStmt.executeQuery(query);
@@ -73,6 +86,7 @@ public class Utils {
         }
         return cities;
     }
+
     private static City parsingToObject(String line) {
         Scanner scanner = new Scanner(line);
         scanner.useDelimiter(";");
@@ -92,7 +106,7 @@ public class Utils {
             String myDriver = "com.mysql.cj.jdbc.Driver";
             String myUrl = "jdbc:mysql://localhost:3306/sys?allowPublicKeyRetrieval=true&useSSL=false";
             Class.forName(myDriver);
-            Connection conn = DriverManager.getConnection(myUrl, "root", "GtV7t31z");
+            Connection conn = DriverManager.getConnection(myUrl, "root", "root");
             String query = "insert into Cities (name, region, district, population, foundation)"
                     + " values (?, ?, ?, ?, ?)";
             PreparedStatement preparedStmt = conn.prepareStatement(query);
@@ -129,7 +143,7 @@ public class Utils {
             String myDriver = "com.mysql.cj.jdbc.Driver";
             String myUrl = "jdbc:mysql://localhost:3306/sys?allowPublicKeyRetrieval=true&useSSL=false";
             Class.forName(myDriver);
-            Connection conn = DriverManager.getConnection(myUrl, "root", "GtV7t31z");
+            Connection conn = DriverManager.getConnection(myUrl, "root", "root");
             String query = "truncate Cities";
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.execute();
